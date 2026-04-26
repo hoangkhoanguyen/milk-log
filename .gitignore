@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+build/
+*.log
+.env
+.env.local
+.env.*.local
+.env.test
+.env.test.local
+SECRETS.md
+playwright-report/
+test-results/
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+# Supabase CLI temp metadata (may contain project refs)
+supabase/.temp/
+# scratch files left by sandbox build attempts
+tmp/
+next.config.mjs.tmp
+"next.config 2.mjs"

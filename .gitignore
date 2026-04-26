@@ -8,6 +8,7 @@ build/
 .env.*.local
 .env.test
 .env.test.local
+.env*
 SECRETS.md
 playwright-report/
 test-results/

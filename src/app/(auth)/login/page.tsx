@@ -8,6 +8,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+/**
+ * Magic-link redirect must match the host the user is actually visiting.
+ * On Vercel, `NEXT_PUBLIC_*` is baked in at **build time**; changing env without a new deploy can
+ * leave the client bundle stale. Using `window.location.origin` avoids that class of bugs.
+ */
+function authRedirectOrigin() {
+  if (typeof window !== 'undefined') return window.location.origin
+  return process.env.NEXT_PUBLIC_APP_URL?.trim().replace(/\/$/, '') || ''
+}
+
 export default function LoginPage() {
   const [email, setEmail] = React.useState('')
   const [pending, setPending] = React.useState(false)
@@ -24,7 +34,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${authRedirectOrigin()}/auth/callback`,
         shouldCreateUser: true
       }
     })

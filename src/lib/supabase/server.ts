@@ -1,7 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-
-type CookieToSet = { name: string; value: string; options?: CookieOptions }
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -14,13 +12,15 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet: CookieToSet[]) {
+        // headers param (Cache-Control etc.) can't be set from Server Components
+        // — middleware handles session refresh and forwards headers there.
+        setAll(cookiesToSet, _headers) {
           try {
-            cookiesToSet.forEach(({ name, value, options }: CookieToSet) =>
+            cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             )
           } catch {
-            // Server Component called this; safe to ignore — middleware refreshes.
+            // Called from a Server Component — safe to ignore.
           }
         }
       }
